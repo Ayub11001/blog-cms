@@ -1,9 +1,8 @@
 import { StrictMode } from "react"
 import ReactDOM from "react-dom/client"
-import { BrowserRouter, Routes, Route } from "react-router"
+import { BrowserRouter, Navigate, Routes, Route } from "react-router"
 
 import "./index.css"
-import App from "./App.tsx"
 import { ThemeProvider } from "@/components/theme-provider.tsx"
 import { AuthLayout } from "@/components/app/auth-layout.tsx"
 import { SingUp } from "./components/app/sign-in.tsx"
@@ -16,7 +15,7 @@ ReactDOM.createRoot(root!).render(
     <BrowserRouter>
       <ThemeProvider>
         <Routes>
-          <Route path="/" element={<App />} />
+          <Route path="/" element={<Navigate to="/posts" replace />} />
           <Route path="/login" element={<SingUp />} />
           <Route element={<AuthLayout />}>
             <Route path="/posts" element={<Posts />} />
