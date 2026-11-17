@@ -1,15 +1,18 @@
 import { authAtom } from "@/atoms/auth-atom"
-import { useSetAtom } from "jotai"
+import { useAtom } from "jotai"
 import { useEffect } from "react"
-import { useNavigate } from "react-router"
+import { useLocation, useNavigate } from "react-router"
 
 export function SingUp() {
-  const setAuth = useSetAtom(authAtom)
+  const [auth, setAuth] = useAtom(authAtom)
   const navigate = useNavigate()
+  const location = useLocation()
+  const from = (location.state as { from?: string } | null)?.from ?? "/posts"
+
   useEffect(() => {
-    setAuth(true)
-    navigate("/posts")
-  }, [])
+    if (!auth) setAuth(true)
+    navigate(from, { replace: true })
+  }, [auth, from, navigate, setAuth])
 
   return <></>
 }
