@@ -1,7 +1,12 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { EditorContent, EditorContext, useEditor } from "@tiptap/react"
+import {
+  EditorContent,
+  EditorContext,
+  useEditor,
+  type JSONContent,
+} from "@tiptap/react"
 
 // --- Tiptap Core Extensions ---
 import { StarterKit } from "@tiptap/starter-kit"
@@ -183,7 +188,16 @@ const MobileToolbarContent = ({
   </>
 )
 
-export function SimpleEditor() {
+type SimpleEditorProps = {
+  initialContent?: string | JSONContent
+  onContentChange?: (content: string) => void
+}
+
+export function SimpleEditor({
+  initialContent = content,
+  onContentChange,
+}: SimpleEditorProps) {
+  const onContentChangeRef = useRef(onContentChange)
   const isMobile = useIsBreakpoint()
   const { height } = useWindowSize()
   const [mobileView, setMobileView] = useState<"main" | "highlighter" | "link">(
@@ -228,8 +242,15 @@ export function SimpleEditor() {
         onError: (error) => console.error("Upload failed:", error),
       }),
     ],
-    content,
+    content: initialContent,
+    onUpdate: ({ editor }) => {
+      onContentChangeRef.current?.(editor.getHTML())
+    },
   })
+
+  useEffect(() => {
+    onContentChangeRef.current = onContentChange
+  }, [onContentChange])
 
   const rect = useCursorVisibility({
     editor,
