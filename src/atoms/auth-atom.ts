@@ -1,2 +1,5 @@
-import {atom} from 'jotai'
-export const authAtom = atom(false)
+import { atomWithStorage } from "jotai/utils"
+
+export const authAtom = atomWithStorage<boolean>("auth", false, undefined, {
+  getOnInit: true,
+})
